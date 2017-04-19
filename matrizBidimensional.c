@@ -315,11 +315,11 @@ matFloatRef mutiplicarMatFloat(matFloatRef a,
                                matFloatRef b,
                                intRef      errNum)
 {
-	int i,j, res;
+	int i,j,k=0, res;
     matFloatRef c;
 
     if (!(res =fallaMatrizFloat(a)) && !(res = fallaMatrizFloat(b))) {
-        if (!(a->numCol == b->numFil) {
+        if (!(a->numCol == b->numFil)) {
 #ifdef DEBUG
             fprintf(stderr, "Error: dimensiones incorrectas\n\n");
 #endif
@@ -328,16 +328,24 @@ matFloatRef mutiplicarMatFloat(matFloatRef a,
         }
         else {
             if (NULL != (c = crearMatFloat(a->numFil, b->numCol, &res))) {
-                for (i=0; i < a->numFil; i++)
+                for (i=0; i < a->numFil; i++){
+					for(j=0; j < b->numCol;j++){
+						c->m[i][j] = 0;
+						for(k=0;k < a->numCol;k++){
+							c->m[i][j]+=a->m[i][k]*b->m[k][j];
+						}
+					}
+				}
+
 
                 *errNum = 0;
                 return c;
-            }
+			}
             else {
                 *errNum = res;
                 return NULL;
             }
-        }
+		}
 	}
     else {
         *errNum = res;
